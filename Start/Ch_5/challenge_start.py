@@ -23,19 +23,49 @@ test_orders = [
         ["pants", "S", False, False],
         ["pants", "S", False, False],
         ["jacket", "M", False, False],
-        ["jacket", "L", False, True]
+        ["jacket", "L", False, True],
     ],
-    [
-        ["dress", "M", False, True],
-        ["whites", 5.25],
-        ["darks", 12.5]
-    ],
+    [["dress", "M", False, True], ["whites", 5.25], ["darks", 12.5]],
     [
         ["shirts and jeans", 28.0],
         ["comforter", False, "L"],
         ["cover", True, "L"],
-        ["shirt", "L", True, True]
-    ]
+        ["shirt", "L", True, True],
+    ],
 ]
 
 # TODO: process each order
+
+for order in test_orders:
+    total_price = 0.0
+
+    print("===================")
+    for item in order:
+        match item:
+            case "shirt" | "pants" | "jacket" | "dress" as garmet, size, starch, sameday:
+                total_price += 12.95
+                if starch:
+                    total_price += 2.00
+                if sameday:
+                    total_price += 10.00
+                print(
+                    f"Dry Clean:({size}) {garmet}",
+                    "Starched" if starch else "",
+                    "same-day" if sameday else "",
+                )
+
+            case str() as desc, weight:
+                if weight >= 15.0:
+                    total_price += (weight * 4.95) * 0.9
+                else:
+                    total_price += weight * 4.95
+
+                print(f"Wash/Fold: {desc}, weight {weight:.1f}")
+
+            case "comforter" | "cover" as blanket, dry_clean, size:
+                total_price += 25.00
+                print(f"Blanket: ({size}) {blanket}", "Dry clean" if dry_clean else "")
+            case _:
+                print("Invalid item format")
+    print(f"Order total: {total_price:.2f}")
+    print("===================")
